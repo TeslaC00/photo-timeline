@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const LENGTH = 6;
+const LENGTH = 12;
 const mainImagePath = "/images/main.jpg";
 
 export default function World() {
@@ -11,15 +11,30 @@ export default function World() {
 
     if (!world || !viewport) return;
 
-    const viewportRect = viewport.getBoundingClientRect();
+    const centerWorld = () => {
+      const viewportRect = viewport.getBoundingClientRect();
+      const x = (viewportRect.width - world.scrollWidth) / 2;
+      const y = (viewportRect.height - world.scrollHeight) / 2;
 
-    const x = (viewportRect.width - world.scrollWidth) / 2;
-    const y = (viewportRect.height - world.scrollHeight) / 2;
+      world.style.left = `${x}px`;
+      world.style.top = `${y}px`;
+    };
 
-    world.style.left = `${x}px`;
-    world.style.top = `${y}px`;
+    // Observe world size changes
+    const worldResizeObserver = new ResizeObserver(centerWorld);
+    worldResizeObserver.observe(world);
 
-    return () => {};
+    // Observe viewport size changes
+    const viewportResizeObserver = new ResizeObserver(centerWorld);
+    viewportResizeObserver.observe(viewport);
+
+    // Initial centering
+    centerWorld();
+
+    return () => {
+      worldResizeObserver.disconnect();
+      viewportResizeObserver.disconnect();
+    };
   }, []);
 
   return (
