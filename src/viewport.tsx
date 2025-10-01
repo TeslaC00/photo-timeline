@@ -8,6 +8,7 @@ export default function Viewport() {
   useEffect(() => {
     const world = document.getElementById("world");
     const viewport = document.getElementById("viewport");
+
     if (!world || !viewport) return;
 
     const onMouseDown = (e: MouseEvent) => {
@@ -30,42 +31,18 @@ export default function Viewport() {
       if (!mouseDown.current) return;
 
       const viewportRect = viewport.getBoundingClientRect();
-      const worldRect = world.getBoundingClientRect();
 
       let newX = e.clientX - coords.current.startX + coords.current.lastX;
       let newY = e.clientY - coords.current.startY + coords.current.lastY;
 
-      const minX = viewportRect.width - worldRect.width;
-      const minY = viewportRect.height - worldRect.height;
+      const minX = viewportRect.width - world.scrollWidth;
+      const minY = viewportRect.height - world.scrollHeight;
 
-      const maxX = 0;
-      const maxY = 0;
+      newX = Math.min(Math.max(newX, minX), 0);
+      newY = Math.min(Math.max(newY, minY), 0);
 
-      console.log(
-        `worldRect: ${worldRect.width}x${worldRect.height}, viewportRect: ${viewportRect.width}x${viewportRect.height}`
-      );
-      if (worldRect.width > viewportRect.width) {
-        newX = Math.max(newX, minX); // Don't move too far right (left edge is too far to the left)
-        newX = Math.min(newX, maxX); // Don't move too far left (left edge is past 0)
-      } else {
-        // If world is smaller than viewport, center it or keep it at 0, 0 (or whatever initial position you want)
-        // For simplicity, we'll clip it to stay completely inside, starting at 0.
-        newX = Math.max(newX, 0); // Left boundary check
-        newX = Math.min(newX, viewportRect.width - worldRect.width); // Right boundary check
-      }
-
-      // Clip Y-coordinate
-      if (worldRect.height > viewportRect.height) {
-        newY = Math.max(newY, minY); // Don't move too far down (top edge is too far up)
-        newY = Math.min(newY, maxY); // Don't move too far up (top edge is past 0)
-      } else {
-        // If world is smaller than viewport, clip it to stay completely inside, starting at 0.
-        newY = Math.max(newY, 0); // Top boundary check
-        newY = Math.min(newY, viewportRect.height - worldRect.height); // Bottom boundary check
-      }
-
-      world.style.left = `${newX}px`;
-      world.style.top = `${newY}px`;
+      if (minX < 0) world.style.left = `${newX}px`;
+      if (minY < 0) world.style.top = `${newY}px`;
     };
 
     world.addEventListener("mousedown", onMouseDown);
