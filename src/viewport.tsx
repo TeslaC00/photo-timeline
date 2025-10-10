@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import World from "./world";
+import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
 
 export default function Viewport() {
   const coords = useRef({ startX: 0, startY: 0, lastX: 0, lastY: 0 });
@@ -35,14 +36,17 @@ export default function Viewport() {
       let newX = e.clientX - coords.current.startX + coords.current.lastX;
       let newY = e.clientY - coords.current.startY + coords.current.lastY;
 
-      const minX = viewportRect.width - world.scrollWidth;
-      const minY = viewportRect.height - world.scrollHeight;
+      const ix = MAX_IMAGE_WIDTH * 0.5;
+      const iy = MAX_IMAGE_HEIGHT * 0.5;
 
-      newX = Math.min(Math.max(newX, minX), 0);
-      newY = Math.min(Math.max(newY, minY), 0);
+      const minX = viewportRect.width - world.scrollWidth + ix;
+      const minY = viewportRect.height - world.scrollHeight + iy;
 
-      if (minX < 0) world.style.left = `${newX}px`;
-      if (minY < 0) world.style.top = `${newY}px`;
+      newX = Math.min(Math.max(newX, minX), -ix);
+      newY = Math.min(Math.max(newY, minY), -iy);
+
+      if (minX < -ix) world.style.left = `${newX}px`;
+      if (minY < -iy) world.style.top = `${newY}px`;
     };
 
     world.addEventListener("mousedown", onMouseDown);
