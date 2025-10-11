@@ -54,8 +54,6 @@ export default function Viewport() {
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [timelineImagePath, setTimelineImagePath] = useState("");
 
-  const openTimeline = () => setIsTimelineOpen(true);
-  const closeTimeline = () => setIsTimelineOpen(false);
   //#endregion
 
   return (
@@ -69,12 +67,12 @@ export default function Viewport() {
       <World
         ref={wordlRef}
         changeTimelineImagePath={setTimelineImagePath}
-        openTimeline={openTimeline}
+        openTimeline={() => setIsTimelineOpen(true)}
         onMouseDown={handleMouseDown}
       />
       <Timeline
         isOpen={isTimelineOpen}
-        onClose={closeTimeline}
+        onClose={() => setIsTimelineOpen(false)}
         imagePath={timelineImagePath}
       />
     </div>

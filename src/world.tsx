@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { MAX_IMAGE_WIDTH } from "./constant";
 
 const LENGTH = 60;
+const PADDING = 1;
 const mainImagePath = "/images/main.jpg";
 
 interface WorldProps {
@@ -33,7 +34,12 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
     console.log(`Rows: ${rows} Cols:${cols}`);
 
     const renderCell = (i: number, j: number) => {
-      const isBorder = i === 0 || j === 0 || i === rows + 1 || j === cols + 1;
+      const isBorder =
+        i < PADDING ||
+        j < PADDING ||
+        i > rows + PADDING - 1 ||
+        j > cols + PADDING - 1;
+
       const commonClass =
         "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none";
 
@@ -70,7 +76,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
           onMouseDown={onMouseDown}
         >
           <div className="flex flex-col gap-5">
-            {Array.from({ length: rows + 2 }).map((_, i) => {
+            {Array.from({ length: rows + 2 * PADDING }).map((_, i) => {
               // ROWS
               const offset = i % 2 === 0 ? MAX_IMAGE_WIDTH * 0.5 : 0;
               return (
@@ -79,7 +85,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
                   className="flex flex-row gap-5"
                   style={{ marginLeft: offset }}
                 >
-                  {Array.from({ length: cols + 2 }).map((_, j) =>
+                  {Array.from({ length: cols + 2 * PADDING }).map((_, j) =>
                     renderCell(i, j)
                   )}
                 </div>
