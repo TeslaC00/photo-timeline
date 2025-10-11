@@ -1,13 +1,23 @@
 import React, { forwardRef } from "react";
 import { MAX_IMAGE_WIDTH } from "./constant";
 
-const LENGTH = 12;
+const LENGTH = 60;
 const mainImagePath = "/images/main.jpg";
 
 interface WorldProps {
   changeTimelineImagePath: (path: string) => void;
   openTimeline: () => void;
   onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+}
+
+function getFactors(number: number) {
+  let factor: number = 1,
+    i = 1;
+  while (i * i <= number) {
+    if (number % i === 0) factor = i;
+    i++;
+  }
+  return [factor, number / factor];
 }
 
 const World = forwardRef<HTMLDivElement, WorldProps>(
@@ -19,19 +29,26 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
       openTimeline();
     };
 
+    const [rows, cols] = getFactors(LENGTH);
+    console.log(`Rows: ${rows} Cols:${cols}`);
+
     const renderCell = (i: number, j: number) => {
-      const isBorder =
-        i === 0 || j === 0 || i === LENGTH + 1 || j === LENGTH + 1;
+      const isBorder = i === 0 || j === 0 || i === rows + 1 || j === cols + 1;
       const commonClass =
         "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none";
 
       if (isBorder) {
-        return <div key={j} className={`w-[120px] h-[84px] ${commonClass}`} />;
+        return (
+          <div
+            key={`${i}-${j}`}
+            className={`w-[120px] h-[84px] ${commonClass}`}
+          />
+        );
       }
 
       return (
         <img
-          key={j}
+          key={`${i}-${j}`}
           src={mainImagePath}
           draggable={false}
           alt="My outstanding photographs :)"
@@ -53,7 +70,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
           onMouseDown={onMouseDown}
         >
           <div className="flex flex-col gap-5">
-            {Array.from({ length: LENGTH + 2 }).map((_, i) => {
+            {Array.from({ length: rows + 2 }).map((_, i) => {
               // ROWS
               const offset = i % 2 === 0 ? MAX_IMAGE_WIDTH * 0.5 : 0;
               return (
@@ -62,7 +79,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
                   className="flex flex-row gap-5"
                   style={{ marginLeft: offset }}
                 >
-                  {Array.from({ length: LENGTH + 2 }).map((_, j) =>
+                  {Array.from({ length: cols + 2 }).map((_, j) =>
                     renderCell(i, j)
                   )}
                 </div>
