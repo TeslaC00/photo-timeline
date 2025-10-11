@@ -1,8 +1,7 @@
-import React, { forwardRef } from "react";
-import { MAX_IMAGE_WIDTH } from "./constant";
+import React, { forwardRef, useEffect, useState } from "react";
+import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
 
 const LENGTH = 60;
-const PADDING = 1;
 const mainImagePath = "/images/main.jpg";
 
 interface WorldProps {
@@ -33,12 +32,36 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
     const [rows, cols] = getFactors(LENGTH);
     console.log(`Rows: ${rows} Cols:${cols}`);
 
+    const [padding, setPadding] = useState(1);
+    // Dynamically calculate padding based on screen vs grid size
+    const calculatePadding = () => {
+      const totalWidth = cols * MAX_IMAGE_WIDTH;
+      const totalHeight = rows * MAX_IMAGE_HEIGHT;
+      const padX = Math.ceil(
+        (window.innerWidth - totalWidth) / (2 * MAX_IMAGE_WIDTH)
+      );
+      const padY = Math.ceil(
+        (window.innerHeight - totalHeight) / (2 * MAX_IMAGE_HEIGHT)
+      );
+      return Math.max(1, Math.max(padX, padY)); // always at least 1
+    };
+
+    useEffect(() => {
+      const updatePadding = () => setPadding(calculatePadding());
+      updatePadding();
+
+      window.addEventListener("resize", updatePadding);
+      return () => window.removeEventListener("resize", updatePadding);
+    }, [rows, cols]);
+
+    console.log(`Padding ${padding}`);
+
     const renderCell = (i: number, j: number) => {
       const isBorder =
-        i < PADDING ||
-        j < PADDING ||
-        i > rows + PADDING - 1 ||
-        j > cols + PADDING - 1;
+        i < padding ||
+        j < padding ||
+        i > rows + padding - 1 ||
+        j > cols + padding - 1;
 
       const commonClass =
         "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none";
@@ -76,7 +99,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
           onMouseDown={onMouseDown}
         >
           <div className="flex flex-col gap-5">
-            {Array.from({ length: rows + 2 * PADDING }).map((_, i) => {
+            {Array.from({ length: rows + 2 * padding }).map((_, i) => {
               // ROWS
               const offset = i % 2 === 0 ? MAX_IMAGE_WIDTH * 0.5 : 0;
               return (
@@ -85,7 +108,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
                   className="flex flex-row gap-5"
                   style={{ marginLeft: offset }}
                 >
-                  {Array.from({ length: cols + 2 * PADDING }).map((_, j) =>
+                  {Array.from({ length: cols + 2 * padding }).map((_, j) =>
                     renderCell(i, j)
                   )}
                 </div>
