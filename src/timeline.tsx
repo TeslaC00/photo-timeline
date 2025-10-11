@@ -1,63 +1,35 @@
-import { useEffect, useRef, useState } from "react";
-import { MAIN_IMAGE_PATH } from "./constant";
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
-export default function Timeline({ imageSrc = MAIN_IMAGE_PATH }) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [imageStyle, setImageStyle] = useState({ left: 0, top: 0, scale: 1 });
+interface TimelineProps {
+  isOpen: boolean;
+  onClose: () => void;
+  imagePath: string;
+}
 
+export default function Timeline({
+  isOpen,
+  onClose,
+  imagePath,
+}: TimelineProps) {
   useEffect(() => {
-    const viewport = document.getElementById("viewport");
-    const img = imgRef.current;
-    if (!viewport || !img) return;
-
-    const centerMainImage = () => {
-      const { width: vw, height: vh } = viewport.getBoundingClientRect();
-
-      const naturalWidth = img.naturalWidth;
-      const naturalHeight = img.naturalHeight;
-
-      // Scale the image to fit within the viewport while maintaining aspect ratio
-      const scale = Math.min(vw / naturalWidth, vh / naturalHeight, 1);
-      const scaledWidth = naturalWidth * scale;
-      const scaledHeight = naturalHeight * scale;
-
-      // Center the image
-      const left = (vw - scaledWidth) / 2;
-      const top = (vh - scaledHeight) / 2;
-
-      setImageStyle({ left, top, scale });
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key == "Escape" && isOpen) onClose();
     };
 
-    // Observe viewport size changes
-    const viewportResizeObserver = new ResizeObserver(centerMainImage);
-    viewportResizeObserver.observe(viewport);
+    document.addEventListener("keydown", handleKeyDown);
 
-    // If image is already loaded center the image
-    if (img.complete) centerMainImage();
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
-    // Re-run on each load (for new images)
-    img.onload = centerMainImage;
+  if (!isOpen) return null;
 
-    return () => viewportResizeObserver.disconnect();
-  }, [imageSrc]);
-
-  return (
-    // Add full screen in and out button on the main image
-    <div id="timeline" className="absolute z-20 inset-0">
-      <img
-        ref={imgRef}
-        src={imageSrc}
-        alt="Main Timeline Image"
-        draggable={false}
-        // max-h-[360px]
-        className="absolute transition-transform duration-500 ease-out"
-        style={{
-          left: imageStyle.left,
-          top: imageStyle.top,
-          transform: `scale(${imageStyle.scale})`,
-          transformOrigin: "top left",
-        }}
-      />
-    </div>
+  return createPortal(
+    <div id="timeline-overlay" onClick={onClose} className="fixed inset-0">
+      <div id="timeline-content" onClick={(e) => e.stopPropagation()}>
+        <img src={imagePath} alt="Main Timeline Image" />
+      </div>
+    </div>,
+    document.body
   );
 }
