@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import World from "./world";
 import Timeline from "./timeline";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
@@ -7,66 +7,47 @@ export default function Viewport() {
   //#region Dragging Logic
   const coords = useRef({ startX: 0, startY: 0, lastX: 0, lastY: 0 });
   const mouseDown = useRef(false);
+  const wordlRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const world = document.getElementById("world");
-    const viewport = document.getElementById("viewport");
+  const handleMouseUp = () => {
+    mouseDown.current = false;
+    if (wordlRef.current) {
+      coords.current.lastX = wordlRef.current.offsetLeft;
+      coords.current.lastY = wordlRef.current.offsetTop;
+      wordlRef.current.style.cursor = "grab";
+    }
+  };
 
-    if (!world || !viewport) return;
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    mouseDown.current = true;
+    coords.current.startX = e.clientX;
+    coords.current.startY = e.clientY;
 
-    const onMouseDown = (e: MouseEvent) => {
-      e.preventDefault();
-      mouseDown.current = true;
-      coords.current.startX = e.clientX;
-      coords.current.startY = e.clientY;
+    wordlRef.current!.style.cursor = "grabbing";
+  };
 
-      world.style.cursor = "grabbing";
-    };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!mouseDown.current || !wordlRef.current) return;
 
-    const onMouseUp = () => {
-      mouseDown.current = false;
-      coords.current.lastX = world.offsetLeft;
-      coords.current.lastY = world.offsetTop;
+    const viewport = e.currentTarget as HTMLDivElement;
+    const viewportRect = viewport.getBoundingClientRect();
 
-      world.style.cursor = "grab";
-    };
+    let newX = e.clientX - coords.current.startX + coords.current.lastX;
+    let newY = e.clientY - coords.current.startY + coords.current.lastY;
 
-    const onMouseMove = (e: MouseEvent) => {
-      if (!mouseDown.current) return;
+    const ix = MAX_IMAGE_WIDTH * 0.5;
+    const iy = MAX_IMAGE_HEIGHT * 0.5;
 
-      const viewportRect = viewport.getBoundingClientRect();
+    const minX = viewportRect.width - wordlRef.current.scrollWidth + ix;
+    const minY = viewportRect.height - wordlRef.current.scrollHeight + iy;
 
-      let newX = e.clientX - coords.current.startX + coords.current.lastX;
-      let newY = e.clientY - coords.current.startY + coords.current.lastY;
+    newX = Math.min(Math.max(newX, minX), -ix);
+    newY = Math.min(Math.max(newY, minY), -iy);
 
-      const ix = MAX_IMAGE_WIDTH * 0.5;
-      const iy = MAX_IMAGE_HEIGHT * 0.5;
-
-      const minX = viewportRect.width - world.scrollWidth + ix;
-      const minY = viewportRect.height - world.scrollHeight + iy;
-
-      newX = Math.min(Math.max(newX, minX), -ix);
-      newY = Math.min(Math.max(newY, minY), -iy);
-
-      if (minX < -ix) world.style.left = `${newX}px`;
-      if (minY < -iy) world.style.top = `${newY}px`;
-    };
-
-    world.addEventListener("mousedown", onMouseDown);
-    world.addEventListener("mouseup", onMouseUp);
-    viewport.addEventListener("mousemove", onMouseMove);
-    viewport.addEventListener("mouseleave", onMouseUp);
-
-    const cleanup = () => {
-      world.removeEventListener("mousedown", onMouseDown);
-      world.removeEventListener("mouseup", onMouseUp);
-      viewport.removeEventListener("mousemove", onMouseMove);
-      viewport.removeEventListener("mouseleave", onMouseUp);
-      world.style.cursor = "";
-    };
-
-    return cleanup;
-  }, []);
+    if (minX < -ix) wordlRef.current.style.left = `${newX}px`;
+    if (minY < -iy) wordlRef.current.style.top = `${newY}px`;
+  };
   //#endregion
 
   //#region Timeline Modal
@@ -78,10 +59,18 @@ export default function Viewport() {
   //#endregion
 
   return (
-    <div id="viewport" className="overflow-hidden h-screen w-screen relative">
+    <div
+      id="viewport"
+      className="overflow-hidden h-screen w-screen relative"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       <World
+        ref={wordlRef}
         changeTimelineImagePath={setTimelineImagePath}
         openTimeline={openTimeline}
+        onMouseDown={handleMouseDown}
       />
       <Timeline
         isOpen={isTimelineOpen}
