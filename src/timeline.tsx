@@ -25,10 +25,17 @@ export default function Timeline({
   if (!isOpen) return null;
 
   return createPortal(
-    <div id="timeline-overlay" onClick={onClose} className="fixed inset-0">
-      <div id="timeline-content" onClick={(e) => e.stopPropagation()}>
-        <img src={imagePath} alt="Main Timeline Image" />
-      </div>
+    <div
+      id="timeline-overlay"
+      onClick={onClose}
+      className="fixed inset-0 flex justify-center items-center"
+    >
+      <img
+        src={imagePath}
+        alt="Main Timeline Image"
+        className="max-w-1/2 h-auto"
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>,
     document.body
   );
