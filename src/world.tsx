@@ -1,4 +1,10 @@
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from "react";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
 import { photoLocations, getPhotosByLocation, type Photo } from "./photo";
 
@@ -18,6 +24,7 @@ interface WorldProps {
   timelineLocationIndex: number;
   isDraggingRef: React.RefObject<boolean>;
   styleClass: string;
+  mousePosition: { x: number; y: number };
 }
 
 const GridCell = React.memo(
@@ -45,14 +52,6 @@ const GridCell = React.memo(
 GridCell.displayName = "GridCell";
 
 const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
-  const handleOnClick = (imageSrc: string) => {
-    // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
-    // make dragging more smooth
-    if (props.isDraggingRef.current) return;
-    props.changeTimelineImagePath(imageSrc);
-    props.openTimeline();
-  };
-
   const location = useMemo(
     () => photoLocations.at(props.timelineLocationIndex) || photoLocations[0],
     [props.timelineLocationIndex]
@@ -68,7 +67,37 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
     [photos.length]
   );
 
+  if (photos.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-white text-xl">Loading Images...</p>
+      </div>
+    );
+  }
+
   const [padding, setPadding] = useState(1);
+
+  const lightStyle = useMemo(() => {
+    if (!ref || typeof ref !== "object" || !("current" in ref) || !ref.current)
+      return {};
+
+    const worldRect = ref.current.getBoundingClientRect();
+    const lightX = props.mousePosition.x - worldRect.left;
+    const lightY = props.mousePosition.y - worldRect.top;
+
+    return {
+      "--mouse-x": `${lightX}px`,
+      "--mouse-y": `${lightY}px`,
+    };
+  }, [props.mousePosition, ref]);
+
+  const handleOnClick = (imageSrc: string) => {
+    // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
+    // make dragging more smooth
+    if (props.isDraggingRef.current) return;
+    props.changeTimelineImagePath(imageSrc);
+    props.openTimeline();
+  };
 
   useEffect(() => {
     if (rows === 0 || cols === 0) return;
@@ -92,14 +121,6 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
     window.addEventListener("resize", updatePadding);
     return () => window.removeEventListener("resize", updatePadding);
   }, [rows, cols]);
-
-  if (photos.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-white text-xl">Loading Images...</p>
-      </div>
-    );
-  }
 
   const grid = useMemo(() => {
     return Array.from({ length: rows + 2 * padding }).map((_, i) => {
@@ -139,13 +160,18 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   return (
     <div
       id="world-container"
-      className={`flex items-center justify-center absolute inset-0 transition-all duration-500 ${props.styleClass}`}
+      className={`flex items-center justify-center absolute inset-0 transition-all duration-500 bg-gray-900 ${props.styleClass}`}
+      style={lightStyle as CSSProperties}
     >
       <div
         id="world"
         className="w-fit h-fit absolute select-none"
         ref={ref}
         onMouseDown={props.onMouseDown}
+        style={{
+          maskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white 100px, transparent 250px)`,
+          WebkitMaskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white 100px, transparent 250px)`,
+        }}
       >
         <div
           key={props.timelineLocationIndex}

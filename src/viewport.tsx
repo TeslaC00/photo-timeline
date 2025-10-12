@@ -9,9 +9,12 @@ export default function Viewport() {
   const wordlRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
 
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   const { handleMouseDown, handleMouseMove, handleMouseUp } = useDraggable(
     wordlRef,
-    isDraggingRef
+    isDraggingRef,
+    setMousePosition
   );
 
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
@@ -31,6 +34,10 @@ export default function Viewport() {
     }
   };
 
+  const handleViewportMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+
   return (
     <div
       id="viewport"
@@ -40,6 +47,9 @@ export default function Viewport() {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onWheel={handleWheel}
+      // For general mouse move capture
+      onMouseEnter={handleViewportMouseMove}
+      onMouseMoveCapture={handleViewportMouseMove}
     >
       <World
         ref={wordlRef}
@@ -49,6 +59,7 @@ export default function Viewport() {
         timelineLocationIndex={timelineLocationIndex}
         isDraggingRef={isDraggingRef}
         styleClass={isTimelineOpen ? "blur-sm brightness-50" : ""}
+        mousePosition={mousePosition}
       />
       <Timeline
         isOpen={isTimelineOpen}

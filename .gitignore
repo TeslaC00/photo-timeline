@@ -25,3 +25,7 @@ dist-ssr
 
 # Custom ignores
 *.webp
+
+# Environment files
+*.env
+manifest.json

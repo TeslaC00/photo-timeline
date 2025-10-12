@@ -7,7 +7,8 @@ import {
 
 export const useDraggable = (
   worldRef: React.RefObject<HTMLDivElement | null>,
-  isDraggingRef: React.RefObject<boolean>
+  isDraggingRef: React.RefObject<boolean>,
+  setMousePosition: ({ x, y }: { x: number; y: number }) => void
 ) => {
   //#region Dragging Logic
   const coords = useRef({ startX: 0, startY: 0, lastX: 0, lastY: 0 });
@@ -37,6 +38,8 @@ export const useDraggable = (
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!mouseDown.current || !worldRef.current) return;
+
+    setMousePosition({ x: e.clientX, y: e.clientY });
 
     const deltaX = e.clientX - coords.current.startX;
     const deltaY = e.clientY - coords.current.startY;
