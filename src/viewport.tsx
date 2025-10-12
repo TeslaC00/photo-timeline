@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import World from "./world";
 import Timeline from "./timeline";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
-import { photoLocation } from "./photo";
+import { photoLocations } from "./photo";
 
 export default function Viewport() {
   //#region Dragging Logic
@@ -63,7 +63,7 @@ export default function Viewport() {
     if (e.deltaY > 0) {
       // Scrolling down
       setTimelineLocationIndex((prev) =>
-        Math.min(prev + 1, photoLocation.length - 1)
+        Math.min(prev + 1, photoLocations.length - 1)
       );
     } else if (e.deltaY < 0) {
       // Scrolling down
@@ -96,7 +96,7 @@ export default function Viewport() {
       {/* Timeline Sidebar */}
       <div id="timeline-sidebar" className="fixed right-0 z-20 select-none">
         <ol>
-          {Array.from(photoLocation, (category, index) => {
+          {Array.from(photoLocations, (category, index) => {
             return (
               <li
                 key={index}

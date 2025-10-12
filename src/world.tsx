@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
-import { photoLocation, photosOfLocation } from "./photo";
+import { photoLocations, getPhotosByLocation } from "./photo";
 
 interface WorldProps {
   changeTimelineImagePath: (path: string) => void;
@@ -36,9 +36,9 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
       openTimeline();
     };
 
-    let location = photoLocation.at(timelineLocationIndex);
+    let location = photoLocations.at(timelineLocationIndex);
     if (location == undefined) location = "Tokyo";
-    const photos = photosOfLocation(String(location));
+    const photos = getPhotosByLocation(String(location));
 
     const [rows, cols] = getFactors(photos.length);
     console.log(`Rows: ${rows} Cols:${cols}`);

@@ -1,7 +1,7 @@
 [
     {
         "id": "tokyo1",
-        "name": "tokyo1",
+        "filename": "tokyo1",
         "description": "An image of our tokyo trip",
         "alt": "Our pic in Tokyo number 1",
         "src": "/images/main.jpg",
@@ -9,7 +9,7 @@
     },
     {
         "id": "osaka1",
-        "name": "osaka1",
+        "filename": "osaka1",
         "description": "An image of our Osaka trip",
         "alt": "Our pic in Osaka number 1",
         "src": "/images/image_0.webp",
@@ -17,7 +17,7 @@
     },
     {
         "id": "osaka2",
-        "name": "osaka2",
+        "filename": "osaka2",
         "description": "An image of our Osaka trip",
         "alt": "Our pic in Osaka number 2",
         "src": "/images/image_1.webp",
@@ -25,7 +25,7 @@
     },
     {
         "id": "nara1",
-        "name": "nara1",
+        "filename": "nara1",
         "description": "An image of our Nara trip",
         "alt": "Our pic in Nara number 1",
         "src": "/images/image_2.webp",
@@ -33,7 +33,7 @@
     },
     {
         "id": "kyoto1",
-        "name": "kyoto1",
+        "filename": "kyoto1",
         "description": "An image of our Kyoto trip",
         "alt": "Our pic in Kyoto number 1",
         "src": "/images/image_4.webp",
@@ -41,7 +41,7 @@
     },
     {
         "id": "saitama1",
-        "name": "saitama1",
+        "filename": "saitama1",
         "description": "An image of our Saitama trip",
         "alt": "Our pic in Saitama number 1",
         "src": "/images/image_5.webp",
