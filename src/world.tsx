@@ -16,6 +16,7 @@ interface WorldProps {
   openTimeline: () => void;
   onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   timelineLocationIndex: number;
+  isDraggingRef: React.RefObject<boolean>;
 }
 
 const GridCell = React.memo(
@@ -46,6 +47,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   const handleOnClick = (imageSrc: string) => {
     // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
     // make dragging more smooth
+    if (props.isDraggingRef.current) return;
     props.changeTimelineImagePath(imageSrc);
     props.openTimeline();
   };

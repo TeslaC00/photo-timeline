@@ -28,13 +28,15 @@ export default function Timeline({
     <div
       id="timeline-overlay"
       onClick={onClose}
-      className="fixed inset-0 flex justify-center items-center"
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 flex justify-center items-center bg-black/80 p-4 animate-fade-in"
     >
       <img
         src={imagePath}
         alt="Main Timeline Image"
-        className="max-w-1/2 h-auto"
         onClick={(e) => e.stopPropagation()}
+        className="block max-w-1/2 h-auto rounded-lg shadow-2xl animate-scale-in"
       />
     </div>,
     document.body
