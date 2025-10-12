@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import World from "./world";
 import Timeline from "./timeline";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
+import { photoLocation } from "./photo";
 
 export default function Viewport() {
   //#region Dragging Logic
@@ -53,7 +54,22 @@ export default function Viewport() {
   //#region Timeline Modal
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [timelineImagePath, setTimelineImagePath] = useState("");
+  //#endregion
 
+  //#region Timeline Sidebar
+  const [timelineLocationIndex, setTimelineLocationIndex] = useState(0);
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (isTimelineOpen) return;
+    if (e.deltaY > 0) {
+      // Scrolling down
+      setTimelineLocationIndex((prev) =>
+        Math.min(prev + 1, photoLocation.length - 1)
+      );
+    } else if (e.deltaY < 0) {
+      // Scrolling down
+      setTimelineLocationIndex((prev) => Math.max(prev - 1, 0));
+    }
+  };
   //#endregion
 
   return (
@@ -63,18 +79,40 @@ export default function Viewport() {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onWheel={handleWheel}
     >
       <World
         ref={wordlRef}
         changeTimelineImagePath={setTimelineImagePath}
         openTimeline={() => setIsTimelineOpen(true)}
         onMouseDown={handleMouseDown}
+        timelineLocationIndex={timelineLocationIndex}
       />
       <Timeline
         isOpen={isTimelineOpen}
         onClose={() => setIsTimelineOpen(false)}
         imagePath={timelineImagePath}
       />
+      {/* Timeline Sidebar */}
+      <div id="timeline-sidebar" className="fixed right-0 z-20 select-none">
+        <ol>
+          {Array.from(photoLocation, (category, index) => {
+            return (
+              <li
+                key={index}
+                className={`cursor-pointer transition-transform duration-200 ${
+                  index === timelineLocationIndex
+                    ? "scale-125 bg-black text-white"
+                    : "hover:scale-110 bg-gray-800"
+                }`}
+                onClick={() => setTimelineLocationIndex(index)}
+              >
+                {category}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
     </div>
   );
 }

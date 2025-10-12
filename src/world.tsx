@@ -1,13 +1,12 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
-
-const LENGTH = 60;
-const mainImagePath = "/images/main.jpg";
+import { photoLocation, photosOfLocation } from "./photo";
 
 interface WorldProps {
   changeTimelineImagePath: (path: string) => void;
   openTimeline: () => void;
   onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  timelineLocationIndex: number;
 }
 
 function getFactors(number: number) {
@@ -21,7 +20,15 @@ function getFactors(number: number) {
 }
 
 const World = forwardRef<HTMLDivElement, WorldProps>(
-  ({ changeTimelineImagePath, openTimeline, onMouseDown }, ref) => {
+  (
+    {
+      changeTimelineImagePath,
+      openTimeline,
+      onMouseDown,
+      timelineLocationIndex,
+    },
+    ref
+  ) => {
     const handleOnClick = (imageSrc: string) => {
       // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
       // make dragging more smooth
@@ -29,7 +36,11 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
       openTimeline();
     };
 
-    const [rows, cols] = getFactors(LENGTH);
+    let location = photoLocation.at(timelineLocationIndex);
+    if (location == undefined) location = "Tokyo";
+    const photos = photosOfLocation(String(location));
+
+    const [rows, cols] = getFactors(photos.length);
     console.log(`Rows: ${rows} Cols:${cols}`);
 
     const [padding, setPadding] = useState(1);
@@ -75,14 +86,18 @@ const World = forwardRef<HTMLDivElement, WorldProps>(
         );
       }
 
+      const index = (i - padding) * (cols - padding) + (j - padding);
+      let imagePath = photos.at(index)?.src;
+      if (imagePath == undefined) imagePath = "";
+
       return (
         <img
           key={`${i}-${j}`}
-          src={mainImagePath}
+          src={imagePath}
           draggable={false}
           alt="My outstanding photographs :)"
           className={`max-w-[120px] ${commonClass}`}
-          onClick={() => handleOnClick(mainImagePath)}
+          onClick={() => handleOnClick(imagePath)}
         />
       );
     };
