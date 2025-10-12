@@ -1,7 +1,7 @@
 import { photoLocations } from "./photo";
 
 interface TimelineSidebarProps {
-  timelineLocationIndex: number;
+  currentIndex: number;
   setTimelineLocationIndex: (index: number) => void;
 }
 
@@ -16,11 +16,12 @@ export default function TimelineSidebar(props: TimelineSidebarProps) {
           return (
             <li
               key={location}
-              className={`cursor-pointer transition-transform duration-200 ${
-                index === props.timelineLocationIndex
-                  ? "scale-125 bg-black text-white"
-                  : "hover:scale-110 bg-gray-800"
+              className={`cursor-pointer transition-all duration-300 ease-in-out text-center rounded-md px-4 py-2 text-sm font-semibold opacity-0 animate-slide-in-right ${
+                index === props.currentIndex
+                  ? "scale-125 bg-blue-600 text-white shadow-lg"
+                  : "hover:scale-110 hover:bg-gray-700 hover:text-white bg-gray-800 text-gray-400"
               }`}
+              style={{ animationDelay: `${100 + index * 75}ms` }}
               onClick={() => props.setTimelineLocationIndex(index)}
             >
               {location}

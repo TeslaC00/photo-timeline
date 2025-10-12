@@ -34,7 +34,8 @@ export default function Viewport() {
   return (
     <div
       id="viewport"
-      className="overflow-hidden h-screen w-screen relative"
+      className="overflow-hidden h-screen w-screen relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 cursor-grab animate-gradient-pan"
+      style={{ backgroundSize: "200% 200%" }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
@@ -47,6 +48,7 @@ export default function Viewport() {
         onMouseDown={handleMouseDown}
         timelineLocationIndex={timelineLocationIndex}
         isDraggingRef={isDraggingRef}
+        styleClass={isTimelineOpen ? "blur-sm brightness-50" : ""}
       />
       <Timeline
         isOpen={isTimelineOpen}
@@ -54,7 +56,7 @@ export default function Viewport() {
         imagePath={timelineImagePath}
       />
       <TimelineSidebar
-        timelineLocationIndex={timelineLocationIndex}
+        currentIndex={timelineLocationIndex}
         setTimelineLocationIndex={setTimelineLocationIndex}
       />
     </div>

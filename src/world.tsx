@@ -17,12 +17,13 @@ interface WorldProps {
   onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   timelineLocationIndex: number;
   isDraggingRef: React.RefObject<boolean>;
+  styleClass: string;
 }
 
 const GridCell = React.memo(
   ({ photo, onClick }: { photo?: Photo; onClick: (src: string) => void }) => {
     const commonClass =
-      "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none";
+      "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30 hover:border-blue-400 ";
 
     if (!photo) {
       return <div className={`w-[120px] h-[84px] ${commonClass}`} />;
@@ -138,7 +139,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   return (
     <div
       id="world-container"
-      className="flex items-center justify-center absolute inset-0"
+      className={`flex items-center justify-center absolute inset-0 transition-all duration-500 ${props.styleClass}`}
     >
       <div
         id="world"
@@ -146,7 +147,13 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
         ref={ref}
         onMouseDown={props.onMouseDown}
       >
-        <div className="flex flex-col gap-5">{grid}</div>
+        <div
+          key={props.timelineLocationIndex}
+          className="flex flex-col gap-5 animate-fade-in"
+          style={{ animationDuration: "0.8s" }}
+        >
+          {grid}
+        </div>
       </div>
     </div>
   );
