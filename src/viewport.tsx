@@ -41,7 +41,7 @@ export default function Viewport() {
   return (
     <div
       id="viewport"
-      className="overflow-hidden h-screen w-screen relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 cursor-grab animate-gradient-pan"
+      className="overflow-hidden h-screen w-screen relative cursor-grab animate-gradient-pan"
       style={{ backgroundSize: "200% 200%" }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
