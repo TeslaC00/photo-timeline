@@ -29,8 +29,9 @@ interface WorldProps {
 
 const GridCell = React.memo(
   ({ photo, onClick }: { photo?: Photo; onClick: (src: string) => void }) => {
-    const commonClass =
-      "border-4 border-blue-700 rounded-2xl pointer-events-auto select-none transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30 hover:border-blue-400 ";
+    const commonClass = `border-4 border-[var(--grid-border)] rounded-2xl pointer-events-auto 
+    select-none transition-all duration-300 ease-in-out hover:scale-105 
+    hover:shadow-[var(--grid-hover-shadow)] hover:border-[var(--grid-hover-border)]`;
 
     if (!photo) {
       return <div className={`w-[120px] h-[84px] ${commonClass}`} />;
@@ -70,7 +71,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   if (photos.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-white text-xl">Loading Images...</p>
+        <p className="text-[var(--loading-text)] text-xl">Loading Images...</p>
       </div>
     );
   }
@@ -160,7 +161,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   return (
     <div
       id="world-container"
-      className={`flex items-center justify-center absolute inset-0 transition-all duration-500 bg-gray-900 ${props.styleClass}`}
+      className={`flex items-center justify-center absolute inset-0 transition-all duration-500 bg-[var(--world-bg)] ${props.styleClass}`}
       style={lightStyle as CSSProperties}
     >
       <div
@@ -169,8 +170,8 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
         ref={ref}
         onMouseDown={props.onMouseDown}
         style={{
-          maskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white 100px, transparent 250px)`,
-          WebkitMaskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white 100px, transparent 250px)`,
+          maskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
+          WebkitMaskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
         }}
       >
         <div

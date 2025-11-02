@@ -13,6 +13,40 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Default theme */
+  /* Modal */
+  --modal-bg: rgba(0, 0, 0, 0.8);
+
+  /* Timeline Sidebar */
+  --timeline-line-start: #60a5fa; /* blue-400 */
+  --timeline-line-end: #a855f7; /* purple-600 */
+  --timeline-selected-bg: #2563eb; /* blue-600 */
+  --timeline-selected-text: #ffffff;
+  --timeline-item-bg: #1f2937; /* gray-800 */
+  --timeline-item-text: #9ca3af; /* gray-400 */
+  --timeline-hover-bg: #374151; /* gray-700 */
+  --timeline-hover-text: #ffffff;
+  --timeline-bullet-border: #60a5fa;
+  --timeline-bullet-bg: #374151;
+  --timeline-bullet-hover-bg: #3b82f6; /* blue-500 */
+  --timeline-bullet-selected-bg: #2563eb;
+  --timeline-bullet-selected-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+
+  /* Grid */
+  --grid-hover-shadow: 0 8px 20px rgba(43, 127, 255, 0.3); /* blue-500/30 */
+  --grid-hover-border: #60a5fa; /* blue-400 */
+  --grid-border: #1e40af; /* blue-700 */
+
+  /* Loading */
+  --loading-text: #ffffff;
+
+  /* World */
+  --world-bg: #111827; /* gray-900 */
+
+  /* Light */
+  --light-inner-radius: 150px;
+  --light-outer-radius: 350px;
 }
 
 @theme {

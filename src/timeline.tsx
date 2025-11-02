@@ -30,7 +30,7 @@ export default function Timeline({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 flex justify-center items-center bg-black/80 p-4 animate-fade-in"
+      className="fixed inset-0 flex justify-center items-center bg-[var(--modal-bg)] p-4 animate-fade-in"
     >
       <img
         src={imagePath}
