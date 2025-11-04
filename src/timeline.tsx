@@ -30,13 +30,13 @@ export default function Timeline({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 flex justify-center items-center bg-[var(--modal-bg)] p-4 animate-fade-in"
+      className="fixed inset-0 flex justify-center items-center bg-[var(--modal-bg)] backdrop-blur-sm p-4 animate-fade-in"
     >
       <img
         src={imagePath}
         alt="Main Timeline Image"
         onClick={(e) => e.stopPropagation()}
-        className="block max-w-1/2 h-auto rounded-lg shadow-2xl animate-scale-in"
+        className="max-w-[90vw] max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-scale-in"
       />
     </div>,
     document.body
