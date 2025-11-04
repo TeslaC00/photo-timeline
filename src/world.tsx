@@ -34,7 +34,7 @@ const GridCell = React.memo(
   ({ photo, onClick }: { photo?: Photo; onClick: (src: string) => void }) => {
     const commonClass = `border-4 border-[var(--grid-border)] rounded-2xl pointer-events-auto 
     select-none transition-all duration-300 ease-in-out hover:scale-105 
-    hover:shadow-[var(--grid-hover-shadow)] hover:border-[var(--grid-hover-border)]`;
+    hover:shadow-[var(--grid-hover-shadow)] hover:border-[var(--grid-hover-border)] object-cover`;
 
     if (!photo) {
       return (
