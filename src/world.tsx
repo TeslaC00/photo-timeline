@@ -37,14 +37,16 @@ const GridCell = React.memo(
       return <div className={`w-[120px] h-[84px] ${commonClass}`} />;
     }
 
+    const src = `/processed_assets/${photo.url}`;
+
     return (
       <img
         key={photo.id}
-        src={photo.src}
+        src={src}
         draggable={false}
         alt={photo.alt}
         className={`max-w-[120px] ${commonClass}`}
-        onClick={() => onClick(photo.src)}
+        onClick={() => onClick(src)}
       />
     );
   }

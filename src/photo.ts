@@ -1,20 +1,27 @@
-import photosJson from "./photos.json";
+import manifestJson from "./manifest.json";
+
+export interface PhotoJson {
+  locations: {
+    location: string;
+    photos: Photo[];
+  }[];
+}
 
 export interface Photo {
   id: string;
-  filename: string;
-  location: string;
-  description: string;
   alt: string;
-  src: string;
+  url: string;
 }
 
-export const photoData: Photo[] = photosJson;
+export const photoData: PhotoJson = manifestJson;
 export const photoLocations: string[] = [
-  ...new Set(photosJson.map((photo) => photo.location)),
+  ...photoData.locations.map((loc) => loc.location),
 ];
 export const getPhotosByLocation: (location: string) => Photo[] = (
   location: string
 ) => {
-  return photoData.filter((photo) => photo.location === location);
+  const locationData = photoData.locations.find(
+    (loc) => loc.location === location
+  );
+  return locationData ? locationData.photos : [];
 };
