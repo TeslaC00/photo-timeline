@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import {
   DRAGGING_THRESHOLD,
-  MAX_IMAGE_HEIGHT,
-  MAX_IMAGE_WIDTH,
+  MAX_CELL_HEIGHT,
+  MAX_CELL_WIDTH,
 } from "./constant";
 
 export const useDraggable = (
@@ -58,8 +58,8 @@ export const useDraggable = (
     let newY = deltaY + coords.current.lastY;
 
     // Boundary calculations
-    const ix = MAX_IMAGE_WIDTH * 0.5;
-    const iy = MAX_IMAGE_HEIGHT * 0.5;
+    const ix = MAX_CELL_WIDTH * 0.5;
+    const iy = MAX_CELL_HEIGHT * 0.5;
     const minX = viewportRect.width - worldRef.current.scrollWidth + ix;
     const minY = viewportRect.height - worldRef.current.scrollHeight + iy;
 

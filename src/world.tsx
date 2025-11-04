@@ -5,7 +5,7 @@ import React, {
   useState,
   type CSSProperties,
 } from "react";
-import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from "./constant";
+import { MAX_CELL_HEIGHT, MAX_CELL_WIDTH } from "./constant";
 import { photoLocations, getPhotosByLocation, type Photo } from "./photo";
 
 function getFactors(number: number): [number, number] {
@@ -14,7 +14,10 @@ function getFactors(number: number): [number, number] {
   for (let i = 1; i * i <= number; i++) {
     if (number % i === 0) factor = i;
   }
-  return [factor, number / factor];
+  const factor2 = number / factor;
+
+  console.log(`Calculated Factors for: ${number} as [${factor}, ${factor2}]`);
+  return [factor, factor2];
 }
 
 interface WorldProps {
@@ -34,7 +37,12 @@ const GridCell = React.memo(
     hover:shadow-[var(--grid-hover-shadow)] hover:border-[var(--grid-hover-border)]`;
 
     if (!photo) {
-      return <div className={`w-[120px] h-[84px] ${commonClass}`} />;
+      return (
+        <div
+          className={commonClass}
+          style={{ width: MAX_CELL_WIDTH, height: MAX_CELL_HEIGHT }}
+        />
+      );
     }
 
     const src = `/processed_assets/${photo.url}`;
@@ -45,7 +53,8 @@ const GridCell = React.memo(
         src={src}
         draggable={false}
         alt={photo.alt}
-        className={`max-w-[120px] ${commonClass}`}
+        className={commonClass}
+        style={{ width: MAX_CELL_WIDTH, height: MAX_CELL_HEIGHT }}
         onClick={() => onClick(src)}
       />
     );
@@ -55,6 +64,7 @@ const GridCell = React.memo(
 GridCell.displayName = "GridCell";
 
 const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
+  // TODO: merge location with photos to avoid multiple useMemo calls
   const location = useMemo(
     () => photoLocations.at(props.timelineLocationIndex) || photoLocations[0],
     [props.timelineLocationIndex]
@@ -107,15 +117,23 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
 
     // Dynamically calculate padding based on screen vs grid size
     const calculatePadding = () => {
-      const totalWidth = cols * MAX_IMAGE_WIDTH;
-      const totalHeight = rows * MAX_IMAGE_HEIGHT;
+      const totalWidth = cols * MAX_CELL_WIDTH;
+      const totalHeight = rows * MAX_CELL_HEIGHT;
       const padX = Math.ceil(
-        (window.innerWidth - totalWidth) / (2 * MAX_IMAGE_WIDTH)
+        (window.innerWidth - totalWidth) / (2 * MAX_CELL_WIDTH)
       );
       const padY = Math.ceil(
-        (window.innerHeight - totalHeight) / (2 * MAX_IMAGE_HEIGHT)
+        (window.innerHeight - totalHeight) / (2 * MAX_CELL_HEIGHT)
       );
-      return Math.max(1, Math.max(padX, padY)); // always at least 1
+      const pad = Math.max(1, Math.max(padX, padY)); // always at least 1
+
+      console.log(
+        `Calculating padding: cols=${cols}, rows=${rows}, 
+        totalWidth=${totalWidth}, totalHeight=${totalHeight}, 
+        windowWidth=${window.innerWidth}, windowHeight=${window.innerHeight},
+        padX=${padX}, padY=${padY}, chosen pad=${pad}`
+      );
+      return pad;
     };
 
     const updatePadding = () => setPadding(calculatePadding());
@@ -132,7 +150,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
         <div
           key={i}
           className="flex flex-row gap-5"
-          style={{ marginLeft: i % 2 === 0 ? MAX_IMAGE_WIDTH * 0.5 : 0 }}
+          style={{ marginLeft: i % 2 === 0 ? MAX_CELL_WIDTH * 0.5 : 0 }}
         >
           {Array.from({ length: cols + 2 * padding }).map((_, j) => {
             const isBorder =
@@ -158,7 +176,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
         </div>
       );
     });
-  }, [rows, cols, padding, photos, handleOnClick]);
+  }, [rows, cols, padding, photos]);
 
   return (
     <div
