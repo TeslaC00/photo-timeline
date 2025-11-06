@@ -3,13 +3,19 @@ import { photoLocations } from "./photo";
 interface TimelineSidebarProps {
   currentIndex: number;
   setTimelineLocationIndex: (index: number) => void;
+  visible: boolean;
 }
 
 export default function TimelineSidebar(props: TimelineSidebarProps) {
   return (
     <div
       id="timeline-sidebar"
-      className="fixed right-0 z-20 select-none top-1/2 -translate-y-1/2 flex items-center pr-4"
+      className={`fixed right-0 z-20 select-none top-1/2 -translate-y-1/2 flex items-center pr-4 
+        ${
+          props.visible
+            ? "animate-fade-in"
+            : "animate-fade-out pointer-events-none"
+        }`}
     >
       <div className="absolute left-1/2 -translate-x-1/2 h-full w-1 bg-gradient-to-b from-[var(--timeline-line-start)] to-[var(--timeline-line-end)] rounded-full">
         {/* Timeline Sidebar line */}

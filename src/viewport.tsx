@@ -4,6 +4,7 @@ import Timeline from "./timeline";
 import { photoLocations } from "./photo";
 import { useDraggable } from "./useDraggable";
 import TimelineSidebar from "./timelineSidebar";
+import ThemePicker from "./themePicker";
 
 export default function Viewport() {
   const wordlRef = useRef<HTMLDivElement | null>(null);
@@ -75,13 +76,18 @@ export default function Viewport() {
       <TimelineSidebar
         currentIndex={timelineLocationIndex}
         setTimelineLocationIndex={setTimelineLocationIndex}
+        visible={!isTimelineOpen}
       />
-      <button
-        onClick={toggleSpotlight}
-        className="fixed top-4 right-4 z-50 p-4 bg-[var(--spotlight-toggle-bg)] text-[var(--spotlight-toggle-text)] rounded-lg shadow-lg hover:brightness-110 transition-all"
-      >
-        Spotlight: {isSpotlightEnabled ? "On" : "Off"}
-      </button>
+      <ThemePicker visible={!isTimelineOpen} />
+
+      {!isTimelineOpen && (
+        <button
+          onClick={toggleSpotlight}
+          className="fixed top-4 right-4 z-50 p-4 bg-[var(--spotlight-toggle-bg)] text-[var(--spotlight-toggle-text)] rounded-lg shadow-lg hover:brightness-110 transition-all animate-slide-in-top"
+        >
+          Spotlight: {isSpotlightEnabled ? "On" : "Off"}
+        </button>
+      )}
     </div>
   );
 }
