@@ -28,6 +28,7 @@ interface WorldProps {
   isDraggingRef: React.RefObject<boolean>;
   styleClass: string;
   mousePosition: { x: number; y: number };
+  isSpotlightEnabled: boolean;
 }
 
 const GridCell = React.memo(
@@ -91,6 +92,8 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
   const [padding, setPadding] = useState(1);
 
   const lightStyle = useMemo(() => {
+    if (!props.isSpotlightEnabled) return {};
+
     if (!ref || typeof ref !== "object" || !("current" in ref) || !ref.current)
       return {};
 
@@ -102,7 +105,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
       "--mouse-x": `${lightX}px`,
       "--mouse-y": `${lightY}px`,
     };
-  }, [props.mousePosition, ref]);
+  }, [props.mousePosition, props.isSpotlightEnabled, ref]);
 
   const handleOnClick = (imageSrc: string) => {
     // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
@@ -190,8 +193,12 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
         ref={ref}
         onMouseDown={props.onMouseDown}
         style={{
-          maskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
-          WebkitMaskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
+          ...(props.isSpotlightEnabled
+            ? {
+                maskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
+                WebkitMaskImage: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), white var(--light-inner-radius), transparent var(--light-outer-radius))`,
+              }
+            : {}),
         }}
       >
         <div

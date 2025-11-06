@@ -9,6 +9,11 @@ export default function Viewport() {
   const wordlRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
 
+  const [isSpotlightEnabled, setIsSpotlightEnabled] = useState(true);
+  const toggleSpotlight = () => {
+    setIsSpotlightEnabled((prev) => !prev);
+  };
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const { handleMouseDown, handleMouseMove, handleMouseUp } = useDraggable(
@@ -60,6 +65,7 @@ export default function Viewport() {
         isDraggingRef={isDraggingRef}
         styleClass={isTimelineOpen ? "blur-sm brightness-50" : ""}
         mousePosition={mousePosition}
+        isSpotlightEnabled={isSpotlightEnabled}
       />
       <Timeline
         isOpen={isTimelineOpen}
@@ -70,6 +76,12 @@ export default function Viewport() {
         currentIndex={timelineLocationIndex}
         setTimelineLocationIndex={setTimelineLocationIndex}
       />
+      <button
+        onClick={toggleSpotlight}
+        className="fixed top-4 right-4 z-50 p-4 bg-[var(--spotlight-toggle-bg)] text-[var(--spotlight-toggle-text)] rounded-lg shadow-lg hover:brightness-110 transition-all"
+      >
+        Spotlight: {isSpotlightEnabled ? "On" : "Off"}
+      </button>
     </div>
   );
 }

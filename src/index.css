@@ -44,9 +44,13 @@
   /* World */
   --world-bg: #111827; /* gray-900 */
 
-  /* Light */
+  /* Spotlight */
   --light-inner-radius: 150px;
   --light-outer-radius: 350px;
+
+  /* Spotlight Toggle Switch */
+  --spotlight-toggle-bg: #374151; /* gray-700 */
+  --spotlight-toggle-text: #ffffff;
 }
 
 @theme {
