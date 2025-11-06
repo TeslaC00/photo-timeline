@@ -25,3 +25,10 @@ export const getPhotosByLocation: (location: string) => Photo[] = (
   );
   return locationData ? locationData.photos : [];
 };
+
+export const getPhotosByLocationIndex: (index: number) => Photo[] = (
+  index: number
+) => {
+  const location = photoLocations[index] || photoLocations[0];
+  return getPhotosByLocation(location);
+};

@@ -10,7 +10,6 @@ export const useDraggable = (
   isDraggingRef: React.RefObject<boolean>,
   setMousePosition: ({ x, y }: { x: number; y: number }) => void
 ) => {
-  //#region Dragging Logic
   const coords = useRef({ startX: 0, startY: 0, lastX: 0, lastY: 0 });
   const mouseDown = useRef(false);
 
@@ -69,6 +68,5 @@ export const useDraggable = (
     if (minX < -ix) worldRef.current.style.left = `${newX}px`;
     if (minY < -iy) worldRef.current.style.top = `${newY}px`;
   };
-  //#endregion
   return { handleMouseUp, handleMouseDown, handleMouseMove };
 };

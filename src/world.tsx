@@ -6,7 +6,9 @@ import React, {
   type CSSProperties,
 } from "react";
 import { MAX_CELL_HEIGHT, MAX_CELL_WIDTH } from "./constant";
-import { photoLocations, getPhotosByLocation, type Photo } from "./photo";
+import { type Photo, getPhotosByLocationIndex } from "./photo";
+
+const assetBaseUrl = import.meta.env.VITE_ASSEST_BASE_URL;
 
 function getFactors(number: number): [number, number] {
   if (number <= 0) return [0, 0];
@@ -46,8 +48,8 @@ const GridCell = React.memo(
       );
     }
 
-    const src = `/processed_assets/${photo.url}`;
-    const thumbnailSrc = `/thumbnail_assets/${photo.url}`;
+    const src = `${assetBaseUrl}/${photo.url}`;
+    const thumbnailSrc = `${assetBaseUrl}/t_${photo.url}`;
 
     return (
       <img
@@ -66,15 +68,9 @@ const GridCell = React.memo(
 GridCell.displayName = "GridCell";
 
 const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
-  // TODO: merge location with photos to avoid multiple useMemo calls
-  const location = useMemo(
-    () => photoLocations.at(props.timelineLocationIndex) || photoLocations[0],
-    [props.timelineLocationIndex]
-  );
-
   const photos = useMemo(
-    () => getPhotosByLocation(String(location)),
-    [location]
+    () => getPhotosByLocationIndex(props.timelineLocationIndex),
+    [props.timelineLocationIndex]
   );
 
   const [rows, cols] = useMemo(
@@ -112,7 +108,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
     // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
     // make dragging more smooth
     if (props.isDraggingRef.current) return;
-    props.changeTimelineImagePath(imageSrc); // TODO"
+    props.changeTimelineImagePath(imageSrc);
     props.openTimeline();
   };
 
