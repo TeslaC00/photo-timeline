@@ -30,6 +30,15 @@ Background Image width - 120px (looks good)
 Centre/Main Image width - ?
 */
 
+// TODO: Feature convert timeline to radial dial from linear timeline
+// TODO: Feature the grid cell size - it does not expand dynamically based on screen size and causes
+//       issue when filling images when factors are not good
+// TODO: Feature add zoom for world grid with mouse wheel by adding scale in style and modify the css cell dimension variables
+/**
+ * It shows as a small bubble like dot and when we hover it open up from left to right with animation
+ * then we can select and choose the location we want to see or scroll to go to next location
+ */
+
 function App() {
   // return <BrickGrid length={24} />;
   return <Viewport />;
