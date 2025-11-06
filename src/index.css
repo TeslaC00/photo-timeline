@@ -45,8 +45,8 @@
   --world-bg: #111827; /* gray-900 */
 
   /* Spotlight */
-  --light-inner-radius: 150px;
-  --light-outer-radius: 350px;
+  --light-inner-radius: 8vw;
+  --light-outer-radius: 20vw;
 
   /* Spotlight Toggle Switch */
   --spotlight-toggle-bg: #374151; /* gray-700 */
