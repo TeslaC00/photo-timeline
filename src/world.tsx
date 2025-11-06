@@ -47,11 +47,12 @@ const GridCell = React.memo(
     }
 
     const src = `/processed_assets/${photo.url}`;
+    const thumbnailSrc = `/thumbnail_assets/${photo.url}`;
 
     return (
       <img
         key={photo.id}
-        src={src}
+        src={thumbnailSrc}
         draggable={false}
         alt={photo.alt}
         className={commonClass}
@@ -111,7 +112,7 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
     // TODO: maybe add a timer for accepting click, so hold click for a while then accept it as click to change main image and
     // make dragging more smooth
     if (props.isDraggingRef.current) return;
-    props.changeTimelineImagePath(imageSrc);
+    props.changeTimelineImagePath(imageSrc); // TODO"
     props.openTimeline();
   };
 
