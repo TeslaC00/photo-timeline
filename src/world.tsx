@@ -18,7 +18,6 @@ function getFactors(number: number): [number, number] {
   }
   const factor2 = number / factor;
 
-  console.log(`Calculated Factors for: ${number} as [${factor}, ${factor2}]`);
   return [factor, factor2];
 }
 
@@ -127,12 +126,6 @@ const World = forwardRef<HTMLDivElement, WorldProps>((props, ref) => {
       );
       const pad = Math.max(1, Math.max(padX, padY)); // always at least 1
 
-      console.log(
-        `Calculating padding: cols=${cols}, rows=${rows}, 
-        totalWidth=${totalWidth}, totalHeight=${totalHeight}, 
-        windowWidth=${window.innerWidth}, windowHeight=${window.innerHeight},
-        padX=${padX}, padY=${padY}, chosen pad=${pad}`
-      );
       return pad;
     };
 
