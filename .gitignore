@@ -25,6 +25,7 @@ dist-ssr
 
 # Custom ignores
 *.webp
+assets/
 
 # Environment files
 *.env
